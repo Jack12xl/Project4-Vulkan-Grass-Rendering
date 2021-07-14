@@ -6,6 +6,8 @@
 #include "Scene.h"
 #include "Image.h"
 
+#include <stdexcept>
+
 Device* device;
 SwapChain* swapChain;
 Renderer* renderer;
