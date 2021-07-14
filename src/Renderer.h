@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "Camera.h"
 
+#include "stdexcept"
+
 class Renderer {
 public:
     Renderer() = delete;
