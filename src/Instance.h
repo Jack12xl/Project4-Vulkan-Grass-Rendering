@@ -34,6 +34,9 @@ private:
 
     void initDebugReport();
 
+    // ref: https://vulkan-tutorial.com/Drawing_a_triangle/Setup/Validation_layers
+    bool checkValidationLayerSupport(const std::vector<const char*> validationLayers);
+
     VkInstance instance;
     VkDebugReportCallbackEXT debugReportCallback;
     std::vector<const char*> deviceExtensions;
