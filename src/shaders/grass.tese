@@ -19,8 +19,8 @@ layout(location = 1) out vec3 normal;
 layout(location = 2) out vec2 texCoords;
 
 void main() {
-    float u = gl_TessCoord.x;
-    float v = gl_TessCoord.y;
+    float u = gl_TessCoord.x; // [0, 0.5, 1] for quads
+    float v = gl_TessCoord.y; // [0 ~ 1.0]
 
 	// TODO: Use u and v to parameterize along the grass blade and output positions for each vertex of the grass blade
 	mat4 vp = camera.proj * camera.view;
@@ -31,12 +31,17 @@ void main() {
 	vec3 c = a + v * (b - a);
 	vec3 t1 = teseBitangent.xyz; 
 	float w = teseV2.w;
+	// curve points
 	vec3 c0 = c - w * t1 * 0.5;
 	vec3 c1 = c + w * t1 * 0.5;
 	vec3 t0 = normalize(b-a);
 	vec3 n = normalize(cross(t0,t1));
 	float threshold = 0.35;
-	float t = 0.5 + (u - 0.5) * (1 - max(v - threshold, 0)/(1 - threshold));
+	// Figure 8: four shape
+	//float t = u; // quad
+	//float t = u + 0.5 * v - u * v;
+	float t = u - u * v * v;
+	//float t = 0.5 + (u - 0.5) * (1 - max(v - threshold, 0)/(1 - threshold));
  	vec3 p = (1 - t) * c0 + t * c1;
 	gl_Position = vp * vec4(p, 1.0);
 	pos = vec4(p, 1.0);

@@ -37,6 +37,7 @@ namespace {
         void *userData) {
 
         fprintf(stderr, "Validation layer: %s\n", msg);
+        // Jack12 breakpoint here to see the traceback
         return VK_FALSE;
     }
 }
