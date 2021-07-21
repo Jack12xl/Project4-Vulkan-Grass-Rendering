@@ -97,18 +97,30 @@ void main() {
 #pragma endregion
 
 #pragma region RECOVER
+    float stiffness = CurBlade.up.w;
+    vec3 idle_v2 = CurV0 + blade_height * normalize(CurUp); 
+    vec3 r = (idle_v2 - CurV2) * stiffness * 2.0;
+
+#pragma endregion
+
+#pragma region WIND
+    vec3 wind_dir = normalize(vec3(1, 0, 1));
+    // wind alignment, blade orthogonal should face more force
+    float fd = 1.0 - abs(dot(wind_dir, normalize(CurV2 - CurV0)));
+    float fr = dot((CurV2 - CurV0), CurUp) / blade_height;
     
-    
+    vec3 w = wind_dir * 10.0 * fd * fr;
+
 #pragma endregion
     
     // TODO
-    vec3 v2_dx = (g) * deltaTime;
+    vec3 v2_dx = (g + r + w) * deltaTime;
     vec3 fv2 = CurV2 + v2_dx;
 
     // State Validate
     fv2 = fv2 - CurUp * min(CurUp * (fv2 - CurV0), 0.0); // (9)
 
-    float l_proj = length(fv2 - CurV0 - CurUp * dot((fv2 - CurV0),CurUp)); // length of v0 -> v2 projected onto the ground (10)
+    float l_proj = length(fv2 - CurV0 - CurUp * dot((fv2 - CurV0),CurUp)); // length of vector v0 -> v2 projected onto the ground (10)
 
     vec3 fv1 = CurV0 + blade_height * CurUp * max(1 - l_proj / blade_height, 0.05 * (l_proj / blade_height, 1.0));
 
@@ -116,7 +128,7 @@ void main() {
     float L1 = distance(fv2, fv1) + distance(fv1, CurV0);
     float n = 3.0; // 3 control points
     float L = (2.0*L0 + (n-1.0)*L1)/(n+1.0); // (12) approximate bezier curve length
-   // heuristic correction to maintain the length of grass
+    // heuristic correction to maintain the length of grass
     CurBlade.v1.xyz = CurV0 + (blade_height / L) * (fv1 - CurV0);
     CurBlade.v2.xyz = CurBlade.v1.xyz + (blade_height / L)*(fv2 - fv1);
     blades[index] = CurBlade;
