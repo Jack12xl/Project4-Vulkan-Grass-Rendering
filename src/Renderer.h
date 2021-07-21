@@ -61,6 +61,7 @@ private:
     VkDescriptorSetLayout timeDescriptorSetLayout;
     //Jack12
     VkDescriptorSetLayout grassDescriptorSetLayout;
+    VkDescriptorSetLayout computeDescriptorSetLayout;
     
     VkDescriptorPool descriptorPool;
 
@@ -69,6 +70,7 @@ private:
     VkDescriptorSet timeDescriptorSet;
     // jack12
     std::vector<VkDescriptorSet> grassDescriptorSets;
+    std::vector<VkDescriptorSet> computeDescriptorSets;
 
 
     VkPipelineLayout graphicsPipelineLayout;

@@ -26,8 +26,8 @@ void main() {
 
 	vec3 lambert = diff *(clamp(dot(worldnormal, lightDir), 0.1, 1.0)+ ambient) ;
 
-	vec3 col1 = vec3(0.2, 0.1, 0.2);
-    vec3 col2 = vec3(0.4, 0.9, 0.3);
+	//vec3 col1 = vec3(0.2, 0.1, 0.2);
+   //vec3 col2 = vec3(0.4, 0.9, 0.3);
 
     outColor = vec4(lambert,1);
     //outColor = vec4(1.0);
