@@ -99,17 +99,20 @@ void main() {
 #pragma region RECOVER
     float stiffness = CurBlade.up.w;
     vec3 idle_v2 = CurV0 + blade_height * normalize(CurUp); 
-    vec3 r = (idle_v2 - CurV2) * stiffness * 2.0;
+    vec3 r = (idle_v2 - CurV2) * stiffness;
 
 #pragma endregion
 
 #pragma region WIND
     vec3 wind_dir = normalize(vec3(1, 0, 1));
+    float waveInterval = 1.2;
+    float wind_speed = 5.0;
+    float wavecoeff = 1*(cos(( dot(CurV0,wind_dir)- wind_speed * totalTime) / waveInterval) );
     // wind alignment, blade orthogonal should face more force
     float fd = 1.0 - abs(dot(wind_dir, normalize(CurV2 - CurV0)));
     float fr = dot((CurV2 - CurV0), CurUp) / blade_height;
     
-    vec3 w = wind_dir * 10.0 * fd * fr;
+    vec3 w = wind_dir * wavecoeff * fd * fr;
 
 #pragma endregion
     
@@ -134,7 +137,55 @@ void main() {
     blades[index] = CurBlade;
        // TODO Collision 
 #pragma region COLLISION
+    // center of the curve
+    CurV0 = CurBlade.v0.xyz;
+    CurV1 = CurBlade.v1.xyz;
+    CurV2 = CurBlade.v2.xyz;
+    CurUp = CurBlade.up.xyz;
+    bool isCollide = false;
+
+    vec3 m = 0.25 * CurV0 + 0.5 * CurV1 + 0.25 * CurV2;
+
+    float ball_radius = 2.0;
+    // let's simulate a ball rotating around
+    float rotate_center_omega = 0.5;
+    float rotate_angle = rotate_center_omega * totalTime;
+    vec3 center_offset = vec3(1, 1, 1);
+    vec3 ball_center = 4.0 * vec3(cos(rotate_angle), 0, sin(rotate_angle)) + center_offset;
+    // test center point and v2
+    vec3 v2cPos = ball_center - CurV2;
+    float l = length(v2cPos);
+    float d2 = min(l - ball_radius, 0.0);
+    // push to nearest border
+    vec3 collVec = v2cPos / l * d2;
     
+    isCollide = d2 < 0.0 ? true: isCollide; 
+
+    vec3 mcPos = ball_center - m;
+    l = length(mcPos);
+    d2 = min(l - ball_radius, 0.0);
+    collVec += mcPos / l * d2;
+    isCollide = d2 < 0.0 ? true: isCollide; 
+
+    fv2 = CurV2 + collVec;
+
+    // State Validate
+    fv2 = fv2 - CurUp * min(CurUp * (fv2 - CurV0), 0.0); // (9)
+
+    l_proj = length(fv2 - CurV0 - CurUp * dot((fv2 - CurV0),CurUp)); // length of vector v0 -> v2 projected onto the ground (10)
+
+    fv1 = CurV0 + blade_height * CurUp * max(1 - l_proj / blade_height, 0.05 * (l_proj / blade_height, 1.0));
+
+    L0 = distance(fv2, CurV0);
+    L1 = distance(fv2, fv1) + distance(fv1, CurV0);
+    n = 3.0; // 3 control points
+    L = (2.0*L0 + (n-1.0)*L1)/(n+1.0); // (12) approximate bezier curve length
+    // heuristic correction to maintain the length of grass
+    CurBlade.v1.xyz = CurV0 + (blade_height / L) * (fv1 - CurV0);
+    CurBlade.v2.xyz = CurBlade.v1.xyz + (blade_height / L)*(fv2 - fv1);
+    blades[index] = CurBlade;
+
+
 #pragma endregion
 
     culledBlades[atomicAdd(numBlades.vertexCount , 1)] = CurBlade;
