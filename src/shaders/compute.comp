@@ -107,7 +107,7 @@ void main() {
     vec3 wind_dir = normalize(vec3(1, 0, 1));
     float waveInterval = 1.2;
     float wind_speed = 5.0;
-    float wavecoeff = 1*(cos(( dot(CurV0,wind_dir)- wind_speed * totalTime) / waveInterval) );
+    float wavecoeff = 2*(cos(( dot(CurV0,wind_dir)- wind_speed * totalTime) / waveInterval) );
     // wind alignment, blade orthogonal should face more force
     float fd = 1.0 - abs(dot(wind_dir, normalize(CurV2 - CurV0)));
     float fr = dot((CurV2 - CurV0), CurUp) / blade_height;
@@ -146,11 +146,11 @@ void main() {
 
     vec3 m = 0.25 * CurV0 + 0.5 * CurV1 + 0.25 * CurV2;
 
-    float ball_radius = 2.0;
+    float ball_radius = 1.5;
     // let's simulate a ball rotating around
-    float rotate_center_omega = 0.5;
+    float rotate_center_omega = 4.0;
     float rotate_angle = rotate_center_omega * totalTime;
-    vec3 center_offset = vec3(1, 1, 1);
+    vec3 center_offset = vec3(1, 1.5, 1);
     vec3 ball_center = 4.0 * vec3(cos(rotate_angle), 0, sin(rotate_angle)) + center_offset;
     // test center point and v2
     vec3 v2cPos = ball_center - CurV2;
@@ -164,7 +164,7 @@ void main() {
     vec3 mcPos = ball_center - m;
     l = length(mcPos);
     d2 = min(l - ball_radius, 0.0);
-    collVec += mcPos / l * d2;
+    collVec += mcPos / l * d2 * 4.0; // center point to v2
     isCollide = d2 < 0.0 ? true: isCollide; 
 
     fv2 = CurV2 + collVec;
