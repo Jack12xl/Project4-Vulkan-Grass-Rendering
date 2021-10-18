@@ -11,7 +11,7 @@ const bool ENABLE_VALIDATION = true;
 
 namespace {
     const std::vector<const char*> validationLayers = {
-        "VK_LAYER_LUNARG_standard_validation"
+        "VK_LAYER_KHRONOS_validation"
     };
 
     // Get the required list of extensions based on whether validation layers are enabled
@@ -37,6 +37,7 @@ namespace {
         void *userData) {
 
         fprintf(stderr, "Validation layer: %s\n", msg);
+        // Jack12 breakpoint here to see the traceback
         return VK_FALSE;
     }
 }
@@ -65,7 +66,7 @@ Instance::Instance(const char* applicationName, unsigned int additionalExtension
     createInfo.ppEnabledExtensionNames = extensions.data();
 
     // Specify global validation layers
-    if (ENABLE_VALIDATION) {
+    if (ENABLE_VALIDATION && this -> checkValidationLayerSupport(validationLayers)) {
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
         createInfo.ppEnabledLayerNames = validationLayers.data();
     } else {
@@ -153,6 +154,31 @@ void Instance::initDebugReport() {
             throw std::runtime_error("Failed to set up debug callback");
         }
     }
+}
+
+bool Instance::checkValidationLayerSupport(const std::vector<const char*> validationLayers) {
+    uint32_t layerCount;
+    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+    std::vector<VkLayerProperties> availableLayers(layerCount);
+    vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+    for (const char* layerName : validationLayers) {
+        bool layerFound = false;
+
+        for (const auto& layerProperties : availableLayers) {
+            if (strcmp(layerName, layerProperties.layerName) == 0) {
+                layerFound = true;
+                break;
+            }
+        }
+
+        if (!layerFound) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 

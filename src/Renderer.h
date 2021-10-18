@@ -4,6 +4,7 @@
 #include "SwapChain.h"
 #include "Scene.h"
 #include "Camera.h"
+#include <stdexcept>
 
 class Renderer {
 public:
@@ -19,6 +20,8 @@ public:
     void CreateModelDescriptorSetLayout();
     void CreateTimeDescriptorSetLayout();
     void CreateComputeDescriptorSetLayout();
+    // Jack12
+    void CreateGrassDescriptorSetLayout();
 
     void CreateDescriptorPool();
 
@@ -56,12 +59,19 @@ private:
     VkDescriptorSetLayout cameraDescriptorSetLayout;
     VkDescriptorSetLayout modelDescriptorSetLayout;
     VkDescriptorSetLayout timeDescriptorSetLayout;
+    //Jack12
+    VkDescriptorSetLayout grassDescriptorSetLayout;
+    VkDescriptorSetLayout computeDescriptorSetLayout;
     
     VkDescriptorPool descriptorPool;
 
     VkDescriptorSet cameraDescriptorSet;
     std::vector<VkDescriptorSet> modelDescriptorSets;
     VkDescriptorSet timeDescriptorSet;
+    // jack12
+    std::vector<VkDescriptorSet> grassDescriptorSets;
+    std::vector<VkDescriptorSet> computeDescriptorSets;
+
 
     VkPipelineLayout graphicsPipelineLayout;
     VkPipelineLayout grassPipelineLayout;

@@ -2,6 +2,7 @@
 
 #include <vulkan/vulkan.h>
 #include "Device.h"
+#include <stdexcept>
 
 namespace BufferUtils {
     void CreateBuffer(Device* device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);

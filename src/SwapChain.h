@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Device.h"
+#include <stdexcept>
 
 class Device;
 class SwapChain {
