@@ -1,7 +1,16 @@
 Instructions - Vulkan Grass Rendering
 ========================
 
-This is due **Wednesday 10/9, evening at midnight**.
+This is the project I personally played for fun and experiment.
+
+Here's my demo:
+
+![](https://github.com/Jack12xl/public_file/blob/master/grass_simulation/grass_in_dev.gif) 
+
+![](https://github.com/Jack12xl/public_file/blob/master/grass_simulation/helicopter_optimized.gif)
+
+Reference:
+The implementation is largely depeneded on 
 
 **QUICK NOTE**: Please use `git clone --recursive` when cloning this repo as there are submodules which need to be cloned as well.
 
