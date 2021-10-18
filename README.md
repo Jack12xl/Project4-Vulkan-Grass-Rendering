@@ -12,6 +12,8 @@ Here's my demo:
 Reference:
 The implementation is largely depeneded on https://github.com/LanLou123/Real-Time-Grass-Rendering. Thanks!
 
+Below is the assignments note. I'll leave them unchanged.
+
 **QUICK NOTE**: Please use `git clone --recursive` when cloning this repo as there are submodules which need to be cloned as well.
 
 **Summary:**
