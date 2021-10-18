@@ -10,7 +10,7 @@ Here's my demo:
 ![](https://github.com/Jack12xl/public_file/blob/master/grass_simulation/helicopter_optimized.gif)
 
 Reference:
-The implementation is largely depeneded on 
+The implementation is largely depeneded on https://github.com/LanLou123/Real-Time-Grass-Rendering. Thanks!
 
 **QUICK NOTE**: Please use `git clone --recursive` when cloning this repo as there are submodules which need to be cloned as well.
 
